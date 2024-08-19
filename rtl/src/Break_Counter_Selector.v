@@ -3,6 +3,7 @@ Version: 1.0
 Break_Counter_Selector.v
 
 Author V1.0: Zeiler Randall-Reed
+Author V1.1: Zeiler Randall-Reed
 
 Description:
 This module is where the break value counter and heuristic selector are combined. There is also an
@@ -12,8 +13,10 @@ of the data that is needed for the heuristic selector is available.
 Notes:
 
 Testing:
-- 8/16 : module in progress, no testing yet
-       : module draft complete, testbench in progress
+V1.0 : module in progress, no testing yet
+    (8/16) : module draft complete, testbench in progress
+
+V1.0 : module draft complete, no testing yet (8/18)
 
 */
 
@@ -26,8 +29,8 @@ module Break_Counter_Selector #(
 )(
     input clk,
     input reset,
-    input [NUM_CLAUSES - 1 : 0] clause_broken_i,
-    input [NUM_CLAUSES - 1 : 0] mask_bits_i,
+    input [MAX_CLAUSES_PER_VARIABLE - 1 : 0] clause_broken_i,
+    input [MAX_CLAUSES_PER_VARIABLE - 1 : 0] mask_bits_i,
     input [NSAT - 1 : 0] break_values_valid_i,
     input [31:0] random_i,
 
