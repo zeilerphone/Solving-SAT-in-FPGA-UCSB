@@ -30,33 +30,28 @@ V2.1
 
 */
 module Break_Value_Counter #(
-    parameter NUM_CLAUSES = 20,
-    parameter NUM_ROWS = 3,
-    parameter NUM_CLAUSES_BITS = 5
+    parameter NUM_CLAUSES = 20
 )
 (
     // input                                   clk,                // Clock signal
     // input                                   reset,              // Reset signal
     input       [NUM_CLAUSES - 1 : 0]       clause_broken_i,    // bits indicating if the clause is broken / unsatisfied
     input       [NUM_CLAUSES - 1 : 0]       mask_bits_i,        // valid mask from the clause table
-    output wire [NUM_CLAUSES_BITS - 1 : 0]  break_value_o,      // number of clauses that are broken
+    output reg [$clog2(NUM_CLAUSES) - 1 : 0]  break_value_o,      // number of clauses that are broken
     output wire [NUM_CLAUSES - 1 : 0]       clause_broken_o     // forwarding of bits indicating if the clause is broken / unsatisfied
 );
 
-wire [NUM_CLAUSES_BITS - 1 : 0] break_sum_steps [NUM_CLAUSES - 2 : 0];
-
-
-// this has the potential to be slow. if timing issues arise, consider a more efficient summation method
-// - maybe try a tree of some sort. I was having a hard time finding a way to make one that is 
-//   parameterizable, so I chose this simpler (and potentially slower) option.
-genvar i;
-generate
-    assign break_sum_steps[0] = (clause_broken_i[0] & mask_bits_i[0]) + (clause_broken_i[1] & mask_bits_i[1]);
-    for(i = 0; i < NUM_CLAUSES - 2; i = i + 1) begin
-        assign break_sum_steps[i + 1] = break_sum_steps[i] + (clause_broken_i[i + 2] & mask_bits_i[i + 2]);
+    localparam NUM_CLAUSES_BITS = $clog2(NUM_CLAUSES);
+    
+    assign clause_broken_o = clause_broken_i & mask_bits_i;
+    
+    integer i;
+    
+    always @ (*) begin
+        break_value_o = 0;
+        for (i = 0; i < NUM_CLAUSES; i = i+1) begin
+            break_value_o = break_value_o + clause_broken_o[i];
+        end 
     end
-endgenerate
-
-assign clause_broken_o = clause_broken_i & mask_bits_i;
 
 endmodule
