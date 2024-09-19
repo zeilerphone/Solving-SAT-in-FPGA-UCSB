@@ -21,5 +21,8 @@ ip_repo/*
 *.log
 vivado_*.*
 
+# Jupyter pycache
+Python-Code/__pycache__/*.*
+
 # Generated reports
 NA
