@@ -8,6 +8,11 @@
       {"wave": "0.....22222220....2222222", "data": ["G1", "G2", "G3", "G4", "G5", "G6", "G7", "G1", "G2", "G3", "G4", "G5", "G6", "G7"]},
       {"wave": "0........2...........2...", "data": ["F0", "F0"]}
     ],
+    ["Controller",
+      {"name": "counter",        "wave": "2222222222222222222222222", "data": "11 0 1 2 3 4 5 6 7 8 9 10 11 0 1 2 3 4 5 6 7 8 9 10 11"},
+      {"name": "is_first_cycle", "wave": "1...........0............"}
+    ],
+    {},
     ["Control Signals",
       {"name": "cr_wr_en 1b",    "wave": "10..........10..........1"},
       {"name": "att_src 2b",     "wave": "x222x........222x........", "data": ["00", "01", "10", "00", "01", "10"],
@@ -18,15 +23,12 @@
       {"name": "cnlb_wr_en 1b",  "wave": "010..........10.........."},
       {"name": "tb_wr_index 2b", "wave": "2.....2222........2222...", "data": ["11(idle)", "00", "01", "10", "11", "00", "01", "10", "11"]},
       {"name": "fifo_wr_en 1b",  "wave": "0........10..........10.."},
-      {"name": "fifo_rd_en 1b",  "wave": "0...........1............"},
+      {"name": "fifo_rd_en 1b",  "wave": "0...........1............",
+                                 "node": "............C............D"},
       {"name": "ucs_request 1b", "wave": "0....10..........10......"}
-    ],
-    ["Controller",
-      {"name": "counter",        "wave": "2222222222222222222222222", "data": "11 0 1 2 3 4 5 6 7 8 9 10 11 0 1 2 3 4 5 6 7 8 9 10 11"},
-      {"name": "is_first_cycle", "wave": "1...........0............"}
     ]
   ],
   "config": {"hscale":1},
-  "edge": ["A+B unused in single thread implementation"],
+  "edge": ["A+B unused in single thread implementation", "C+D after first cycle, read from FIFO"],
   "head": {"text": "Controller Timing"}
 }

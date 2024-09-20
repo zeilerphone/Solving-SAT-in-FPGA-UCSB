@@ -1,0 +1,19 @@
+{"signal": [
+    {"name": "clk",   "wave": "p....."},
+    {"name": "stage", "wave": "22227x", "data": "D E1_1 E1_2 E1_3 E2"},
+    {},
+    ["Variable Flip Selector I/O",
+      {"name": "clause_broken_i",       "wave": "x222x.", "data": "L0 L1 L2"},
+      {"name": "mask_bits_i",           "wave": "x222x.", "data": "L0 L1 L2"},
+      {"name": "break_values_valid_i",  "wave": "x..2x.", "data": "3'b111"  },
+      {"name": "random_i",              "wave": "222222"                    },
+      {"name": "wr_en_i",               "wave": "22222.", "data": "00 01 10 11 00"},
+      {},
+      {"name": "selected_o",          "wave": "x...7x"},
+      {"name": "clause_valid_bits_o", "wave": "x...7x"}
+    ] 
+  ],
+  "config": {"hscale":2},
+  "edge": [],
+  "head": {"text": "Variable Flip Selector Timing"}
+}

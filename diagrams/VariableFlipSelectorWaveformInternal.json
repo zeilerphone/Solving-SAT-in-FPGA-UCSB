@@ -1,38 +1,50 @@
 {
 "signal": [
-  {"name": "clk", "wave": "p.......", "phase": 2, "period": 1},
-  {"name": "stage", "wave": "x22227xx", "data": "D E1_1 E1_2 E1_3 E2", "phase": 2},
+  {"name": "clk", "wave": "p......", "phase": 2, "period": 1},
+  {"name": "stage", "wave": "x22227x", "data": "D E1_1 E1_2 E1_3 E2", "phase": 2},
   {},
-  {"node": "A......B", "phase": 0.15},
+  {"node": "A.....B", "phase": 0.15},
   ["Break Value Counter",
-   {"name": "clause_broken_i",  "wave": "zz789z..", "data": "L0 L1 L2", "phase": 2},
-   {"name": "mask_bits_i",      "wave": "zz789z..", "data": "L0 L1 L2", "phase": 2},
-   {"name": "break_value_o",    "wave": "zz345z..", "data": "L0 L1 L2", "phase": 1.5},
-   {"name": "clause_broken_o"}
+    {"name": "clause_broken_i",  "wave": "zz689z.", "data": "L0 L1 L2", "phase": 2,
+                                 "node": "..a...."                                  },
+    {"name": "mask_bits_i",      "wave": "zz689z.", "data": "L0 L1 L2", "phase": 2  },
+    {"name": "clause_valid_o",   "wave": "zz689z.", "data": "L0 L1 L2", "phase": 1.5,
+                                 "node": "..b...."                                  },
+    {"name": "break_value_o",    "wave": "zz345z.", "data": "L0 L1 L2", "phase": 1.5}
+  ],
+  {                           "node": "....IJ..................", "period": 0.25},
+  {"node": "C.....D", "phase": 0.15},
+  ["Internal Registers",
+    {"name": "wr_sel_i1",        "wave": "0..1.0.",                     "phase": 2  },
+    {"name": "wr_sel_i1",        "wave": "0.1010.",                     "phase": 2  },
+    {"name": "clause_valid_din", "wave": "zz689z.", "data": "L0 L1 L2", "phase": 1.5},
+    {"name": "clause_valid_do1", "wave": "z..8..",  "data": "L1"                    },
+    {"name": "clause_valid_do2", "wave": "z.6...",  "data": "L0"                    },
+    {"name": "break_values_din", "wave": "zz345z.", "data": "L0 L1 L2", "phase": 1.5},
+    {"name": "break_values_do1", "wave": "z..4..",  "data": "L1"                    },
+    {"name": "break_values_do2", "wave": "z.3...",  "data": "L0"                    }
+  ],
+  ["Outputs",
+    {"name": "selected_o",          "wave": "x...7x"},
+    {"name": "clause_valid_bits_o", "wave": "x...7x"}
   ],
   {},
-  {"node": "C......D", "phase": 0.15},
-  ["Break Value Register",
-   {"name": "din",              "wave": "zz345z..", "data": "L0 L1 L2", "phase": 1.5},
-   {"name": "brk_w1",           "wave": "0..1.0..",                     "phase": 2},
-   {"name": "brk_w0",           "wave": "0.1010..",                     "phase": 2},
-   {"name": "d0out",            "wave": "z.3....",  "data": "L0"                  },
-   {"name": "d1out",            "wave": "z..4...",  "data": "L1"                  }
-  ],
-  {},
-  {"node": "E......F", "phase": 0.15},
+  {"node": "E.....F", "phase": 0.15},
   ["Heuristic Selector",
-   {"name": "break_values_i0",  "wave": "z.3....",  "data": "L0"                  },
-   {"name": "break_values_i1",  "wave": "z..4...",  "data": "L1"                  },
-   {"name": "break_values_i2",  "wave": "z.345z..", "data": "L0 L1 L2", "phase": 1.5},
-   {"name": "break_values_v",   "wave": "0..60..",  "data": "2'b11"               },
-   {"name": "random_i",         "wave": "22222222",                     "phase": 2},
-   {"name": "enable_i",         "wave": "0..10.."                                 },
-   {"name": "select_o",         "wave": "x............97..x..........", "period": 0.25},
-   {"name": "rand_s_o",         "wave": "x............97..x..........", "period": 0.25}
-  ]
+    {"name": "break_values_v",  "wave": "0..20.",  "data": "2'b11"                 },
+    {"name": "break_values_i2", "wave": "z.345z.", "data": "L0 L1 L2", "phase": 1.5,
+                                "node": "....c.."},
+    {"name": "break_values_i1", "wave": "z..4..",  "data": "L1"                    },
+    {"name": "break_values_i0", "wave": "z.3...",  "data": "L0"                    },
+    {"name": "random_i",        "wave": "2222222",                     "phase": 2  },
+    {"name": "enable_i",        "wave": "0..10."                                   },
+    {"name": "select_o",        "wave": "x...........9.7.x.......", "period": 0.25,
+                                "node": "..............d........."                 }
+    
+  ],
+  {                           "node": ".............GH.........", "period": 0.25}
 ], 
 "config": {"hscale":2},
-"edge": ["A+B combinational", "C+D sequential", "E+F combinational"],
+"edge": ["A+B combinational", "C+D sequential", "E+F combinational", "c-G", "d-H", "G+H combinational delay", "a-I", "J-b", "I+J combinational delay"],
 "head": {"text": "Variable Flip Selector Internal Waveform", "tick": 0}
 }
