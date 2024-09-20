@@ -1,0 +1,38 @@
+{
+"signal": [
+  {"name": "clk", "wave": "p.......", "phase": 2, "period": 1},
+  {"name": "stage", "wave": "x22227xx", "data": "D E1_1 E1_2 E1_3 E2", "phase": 2},
+  {},
+  {"node": "A......B", "phase": 0.15},
+  ["Break Value Counter",
+   {"name": "clause_broken_i",  "wave": "zz789z..", "data": "L0 L1 L2", "phase": 2},
+   {"name": "mask_bits_i",      "wave": "zz789z..", "data": "L0 L1 L2", "phase": 2},
+   {"name": "break_value_o",    "wave": "zz345z..", "data": "L0 L1 L2", "phase": 1.5},
+   {"name": "clause_broken_o"}
+  ],
+  {},
+  {"node": "C......D", "phase": 0.15},
+  ["Break Value Register",
+   {"name": "din",              "wave": "zz345z..", "data": "L0 L1 L2", "phase": 1.5},
+   {"name": "brk_w1",           "wave": "0..1.0..",                     "phase": 2},
+   {"name": "brk_w0",           "wave": "0.1010..",                     "phase": 2},
+   {"name": "d0out",            "wave": "z.3....",  "data": "L0"                  },
+   {"name": "d1out",            "wave": "z..4...",  "data": "L1"                  }
+  ],
+  {},
+  {"node": "E......F", "phase": 0.15},
+  ["Heuristic Selector",
+   {"name": "break_values_i0",  "wave": "z.3....",  "data": "L0"                  },
+   {"name": "break_values_i1",  "wave": "z..4...",  "data": "L1"                  },
+   {"name": "break_values_i2",  "wave": "z.345z..", "data": "L0 L1 L2", "phase": 1.5},
+   {"name": "break_values_v",   "wave": "0..60..",  "data": "2'b11"               },
+   {"name": "random_i",         "wave": "22222222",                     "phase": 2},
+   {"name": "enable_i",         "wave": "0..10.."                                 },
+   {"name": "select_o",         "wave": "x............97..x..........", "period": 0.25},
+   {"name": "rand_s_o",         "wave": "x............97..x..........", "period": 0.25}
+  ]
+], 
+"config": {"hscale":2},
+"edge": ["A+B combinational", "C+D sequential", "E+F combinational"],
+"head": {"text": "Variable Flip Selector Internal Waveform", "tick": 0}
+}

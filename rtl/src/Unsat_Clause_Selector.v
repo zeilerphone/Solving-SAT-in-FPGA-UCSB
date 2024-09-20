@@ -135,7 +135,7 @@ localparam CLAUSE_WIDTH = NSAT * LIT_ADDR_WIDTH;
     wire mt_en;
     wire [BUF_ADDR_WIDTH - 1 : 0] mt_addr;
     wire mt_clear_debug_DIV_BY_ZERO;
-    wire [MT_WIDTH - 1 : 0] mt_data_o;
+    wire [MT_WIDTH - 1 : 0] mt_data;
     wire mt_debug_DIV_BY_ZERO;
 
 // unsat buffer instantiation
@@ -210,7 +210,7 @@ localparam CLAUSE_WIDTH = NSAT * LIT_ADDR_WIDTH;
         .clk_i(clk_i),
         .en_i(mt_en),
         .addr_i(mt_addr),
-        .data_o(mt_data_o),
+        .data_o(mt_data),
         .clear_debug_DIV_BY_ZERO_i(mt_clear_debug_DIV_BY_ZERO),
         .debug_DIV_BY_ZERO_o(mt_debug_DIV_BY_ZERO)
     );
@@ -236,7 +236,7 @@ localparam CLAUSE_WIDTH = NSAT * LIT_ADDR_WIDTH;
             // stage 2
             random_number_q2 <= random_number_q1;
             buf_count_q2 <= buf_count_q1;
-            product_q2 <= random_number_q1 * mt_data_o;
+            product_q2 <= random_number_q1 * mt_data;
             request_q2 <= request_q1;
             // stage 3 
             selection_q3 <= (buf_count_q2 == 1) ? 0 : random_number_q2 - ((product_q2 >> MT_WIDTH) * buf_count_q2); // changed from vector range to bitshift

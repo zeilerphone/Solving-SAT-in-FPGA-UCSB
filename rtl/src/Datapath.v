@@ -55,11 +55,10 @@ module Datapath #(
     parameter MAX_CLAUSE_MEMBERSHIP = 20,
     parameter FIFO_DEPTH = 32,
     parameter UNSAT_CLAUSE_BUFFER_DEPTH = 2048,
-    parameter CONTROLLER_SIGNAL_WIDTH = 14 // will change
+    parameter CONTROLLER_SIGNAL_WIDTH = 13 // will change
 ) (
     input clk_i, rst_i,
-    // controller signal : [x_xx_x_x_x_xx_x_xx_x_x]
-    // CR_wren, ATT_src(2), VT_rden, VT_addr_src, VT_wren, VFS_wren(2), CFLB_wren, TB_wr_index(2), FIFO_wren, FIFO_rden 
+    // controller signal : [x_xx_x_x_xx_x_xx_x_x]
     input [CONTROLLER_SIGNAL_WIDTH - 1 : 0] control_signal_i
     // in progress
     
@@ -79,19 +78,18 @@ integer i, j;
 genvar n, m;
 
 /* --- control signals --- */
-    wire         cr_wr_en;
-    wire [1 : 0] att_src;
-    wire         vt_addr_src;
-    wire         vt_en;
-    wire         vt_wr_en;
-    wire [1 : 0] vfs_wr_en;
-    wire         cflb_wr_en;
-    wire [1 : 0] tb_wr_index;
-    wire         fifo_wr_en;
-    wire         fifo_rd_en;
-    wire         ucs_request;
+    wire         cr_wr_en;      // 1b clause register write enable
+    wire [1 : 0] att_src;       // 2b address translation table source
+    wire         vt_en;         // 1b variable table enable
+    wire         vt_write;      // 1b variable table write enable and address source mux select
+    wire [1 : 0] vfs_wr_en;     // 2b variable flip selector write enable
+    wire         cnlb_wr_en;    // 1b clause negated literals buffer write enable
+    wire [1 : 0] tb_wr_index;   // 2b temporal buffer wrapper write index
+    wire         fifo_wr_en;    // 1b fifo write enable
+    wire         fifo_rd_en;    // 1b fifo read enable
+    wire         ucs_request;   // 1b unsat clause selector request
 
-    assign {cr_wr_en, att_src, vt_addr_src, vt_en, vt_wr_en, vfs_wr_en, cflb_wr_en, tb_wr_index, fifo_wr_en, fifo_rd_en, ucs_request} = control_signal_i;
+    assign {cr_wr_en, att_src, vt_en, vt_write, vfs_wr_en, cnlb_wr_en, tb_wr_index, fifo_wr_en, fifo_rd_en, ucs_request} = control_signal_i;
 
 /* --- internal wires --- */
     wire [CLAUSE_WIDTH - 1 : 0] cr_selected_clause;
@@ -200,7 +198,7 @@ genvar n, m;
         if (rst_i) begin
             clause_negated_literals_buffer <= 0;
         end else begin
-            if(cflb_wr_en) clause_negated_literals_buffer <= _selected_clause_negated;
+            if(cnlb_wr_en) clause_negated_literals_buffer <= _selected_clause_negated;
         end
     end
 
@@ -278,7 +276,7 @@ genvar n, m;
     assign nb_negation_bits = negation_buffer;
 
 /* --- variable table cluster --- */       // [TODO] - write interface
-    assign _vtc_address_m = vt_addr_src ? {(NSAT - 1) * MC{_selected_literal_negated_addr}} : ct_variable_addresses;
+    assign _vtc_address_m = vt_write ? {(NSAT - 1) * MC{_selected_literal_negated_addr}} : ct_variable_addresses;
     assign _vtc_data = _selected_literal_negated_neg_bit;
 
     Variable_Table_Cluster #(
@@ -291,7 +289,7 @@ genvar n, m;
         .axi_addr_i(),
         .axi_data_i(),
         .en_i(vt_en),
-        .wr_en_i(vt_wr_en),
+        .wr_en_i(vt_write),
         .addr_mi(_vtc_address_m),
         .data_i(_vtc_data),
         .data_mo(vtc_value_bits)
@@ -337,7 +335,7 @@ genvar n, m;
     assign nb2_negation_bits = negation_buffer_2;
 
 /* --- variable table cluster 2 --- */     // [TODO] - write interface
-    assign _vtc2_address_m = vt_addr_src ? {NSAT{_selected_literal_negated_addr}} : usc_selected_clause_addresses;
+    assign _vtc2_address_m = vt_write ? {NSAT{_selected_literal_negated_addr}} : usc_selected_clause_addresses;
     assign _vtc2_data = _selected_literal_negated_neg_bit;
 
     Variable_Table_Cluster #(
@@ -346,7 +344,7 @@ genvar n, m;
     ) variable_table_cluster_2 (
         .clk_i(clk_i),
         .en_i(vt_en),
-        .wr_en_i(vt_wr_en),
+        .wr_en_i(vt_write),
         .addr_mi(_vtc2_address_m),
         .data_i(_vtc2_data),
         .data_mo(vtc2_value_bits),

@@ -14,5 +14,6 @@
     ]
   ], 
   "edge" : ["a~b replaces selected clause", "M+N count const", "c~d count decr"],
-  "config": {"hscale":1}
+  "config": {"hscale":1},
+  "head": {"text": "Unsatisfied Clause Selector Timing"}
 }
