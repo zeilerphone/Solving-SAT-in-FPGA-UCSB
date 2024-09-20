@@ -52,11 +52,11 @@ module Variable_Flip_Selector #(
 
     // internal registers
     reg [MCB - 1 : 0] break_values_reg  [NSAT - 2 : 0];
-    reg [MC  - 1 : 0] break_bits_reg    [NSAT - 2 : 0];
+    reg [MC  - 1 : 0] clause_valid_reg  [NSAT - 2 : 0];
 
     // internal wires
     wire [MCB - 1 : 0] break_value;
-    wire [MC  - 1 : 0] break_bits;
+    wire [MC  - 1 : 0] clause_valid;
 
     wire [NSAT * MCB - 1 : 0] all_break_values;
 
@@ -82,7 +82,7 @@ module Variable_Flip_Selector #(
         .clause_broken_i(clause_broken_i),
         .mask_bits_i(mask_bits_i),
         .break_value_o(break_value),
-        .clause_broken_o(break_bits)
+        .clause_broken_o(clause_valid)
     );
 
     Heuristic_Selector #(
@@ -98,12 +98,12 @@ module Variable_Flip_Selector #(
         .random_selection_o()
     );
 
-    // break_values_reg and break_bits_reg
+    // break_values_reg and clause_valid_reg
     always @(posedge clk_i) begin
         if(rst_i) begin
             for(i = 0; i < NSAT - 1; i = i + 1) begin
                 break_values_reg[i] <= 0;
-                break_bits_reg[i] <= 0;
+                clause_valid_reg[i] <= 0;
             end
             selected_o <= 2'b11;
             clause_valid_bits_o <= 0;
@@ -111,14 +111,14 @@ module Variable_Flip_Selector #(
             for(i = 0; i < NSAT - 1; i = i + 1) begin // assign break_values_reg if wr_en_i is one hot
                 if(wr_en_i[i] == 1 && control_one_hot) begin
                     break_values_reg[i] <= break_value;
-                    break_bits_reg[i] <= break_bits;
+                    clause_valid_reg[i] <= clause_valid;
                 end
             end
             if(&wr_en_i) begin // when we are using the data (all ones)
                 // [NOTE]: removed the following line to pass lint, could be bug source
-                // break_bits_reg[NSAT - 1] <= break_bits;
+                // clause_valid_reg[NSAT - 1] <= clause_valid;
                 selected_o <= select;
-                clause_valid_bits_o <= select == 2'b10 ? break_bits : break_bits_reg[select];
+                clause_valid_bits_o <= select == 2'b10 ? clause_valid : clause_valid_reg[select];
             end
         end
     end
